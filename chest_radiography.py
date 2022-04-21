@@ -1,11 +1,12 @@
 """Chest Radiography (CXR) Image object and methods."""
 
-from tty import IFLAG
 from PIL import Image
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib import patches
-from numpy import clip
+from pandas import DataFrame
+import io
+import numpy as np
 
 
 class CXR:
@@ -72,14 +73,41 @@ class CXR:
         return fig
 
 
-if __name__ == "__main__":
-    cxr = CXR(
-        pid="00436515-870c-4b36-a041-de91049b9ab4",
-        x=[264.0, 562.0],
-        y=[152.0, 152.0],
-        width=[213.0, 256.0],
-        height=[379.0, 453.0],
-        diagnose=True,
-        source="images",
-    )
-    f = cxr.get_symptom_areas
+class CXRMissingException(Exception):
+    """Exception is raised when CXR for a given patient is missing."""
+
+    def __init__(self, *args: object) -> None:
+        """Initialize."""
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+    def __str__(self) -> str:
+        """Output string."""
+        if self.message:
+            return "{0}".format(self.message)
+        else:
+            return "a CXRMissingException has been raised."
+
+
+def get_cxr_document(pid: str, annot_df: DataFrame) -> dict:
+    """Convert a subset of dataframe a dict document."""
+    # subset the dataframe
+    cxr_df = annot_df.loc[annot_df["patientId"] == pid].drop("patientId", axis=1)
+    # check if there is observation
+    if cxr_df.shape[0] == 0:
+        raise CXRMissingException(f"patient pid:{pid} does not exist")
+    cxr_doc: dict[str, str | int | list[float]] = dict()
+    cxr_doc["pid"] = pid
+    cxr_doc["diagnose"] = int(cxr_df["Target"].values[0])
+    cxr_df = cxr_df.drop("Target", axis=1)
+    for col in cxr_df.columns:
+        val = cxr_df[col].values.tolist()
+        cxr_doc[col] = [] if np.isnan(val[0]) else val
+    return cxr_doc
+
+
+def convert_img_to_bytes(img: Image):
+    """Convert the .jpg image to data in bytes so that it can be saved into MongDB."""
+    pass
