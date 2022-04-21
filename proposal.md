@@ -3,7 +3,7 @@
 
 *Team member*: Scott Sun
 ## Introduction
-The project will be developing a simple software that implement some object detection model. The software can detect and mark inflammation spots for a given chest x-ray image.
+The project will be developing a simple software that implement some object detection model. The software can detect and mark inflammation spots for a given chest radiography (CXR) image.
 
 ## Basic functionalities
 1. Developing some simple object detection model (YOLOv3)
