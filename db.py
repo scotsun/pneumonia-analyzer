@@ -1,4 +1,4 @@
-"""Migrate data into MongoDB. Time elapsed: ~10:27 and ~42it/s"""
+"""Migrate data into MongoDB. Time elapsed: ~10:27 and ~42it/s."""
 
 from unicodedata import name
 from pymongo import MongoClient

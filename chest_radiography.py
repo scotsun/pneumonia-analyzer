@@ -6,37 +6,31 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from pandas import DataFrame
-import io
+from io import BytesIO
 import numpy as np
+from app import db
 
 
 class CXR:
     """Chest Radiography."""
 
-    def __init__(
-        self,
-        pid: str,
-        x: list[float],
-        y: list[float],
-        width: list[float],
-        height: list[float],
-        diagnose: bool,
-        source: str,
-    ) -> None:
+    def __init__(self, pid: str) -> None:
         """Init a CXR object."""
-        img = Image.open(f"./pneumonia/{source}/{pid}.jpg")
         self._pid = pid
-        self._img = img
-        self._x = x
-        self._y = y
-        self._width = width
-        self._height = height
-        self._dignose = diagnose
+        cxr_record = db.cxr.find_one({"pid": pid})
+        if cxr_record:
+            self._img = cxr_record["img"]
+            self._diagnose = cxr_record["diagnose"]
+            self._x = cxr_record["x"]
+            self._y = cxr_record["y"]
+            self._width = cxr_record["width"]
+            self._height = cxr_record["height"]
 
     @property
     def img(self) -> Image:
         """Getter of img."""
-        return self._img
+        img = Image.open(BytesIO(self._img))
+        return img
 
     @property
     def mark_symptoms(self) -> Figure:
@@ -94,7 +88,7 @@ class CXRMissingException(Exception):
 
 def img_to_bytes(img: Image) -> bytes:
     """Convert the .jpg image to data in bytes so that it can be saved into MongDB."""
-    image_bytes = io.BytesIO()
+    image_bytes = BytesIO()
     img.save(image_bytes, format="JPEG")
     return image_bytes.getvalue()
 
