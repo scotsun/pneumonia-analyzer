@@ -1,12 +1,10 @@
-"""Utility functions to re-structure bounding boxes, IoU computation, visualization.
+"""Utility functions to re-structure bounding boxes, IoU computation.
 
 Reference: https://keras.io/examples/vision/retinanet/.
 """
 
 import tensorflow as tf
 from tensorflow import Tensor
-import numpy as np
-import matplotlib.pyplot as plt
 
 
 def swap_xy(boxes: Tensor) -> Tensor:
@@ -47,6 +45,7 @@ def convert_to_xywh(boxes: Tensor) -> Tensor:
         `[xmin, ymin, xmax, ymax]`.
 
         c = (min + max) / 2
+
         width, height = max - min
 
     Returns:
@@ -75,7 +74,7 @@ def convert_to_corners(boxes: Tensor) -> Tensor:
     )
 
 
-def compute_iou(boxes1, boxes2):
+def compute_iou(boxes1: Tensor, boxes2: Tensor) -> Tensor:
     """Compute pairwise IOU matrix for given two sets of boxes.
 
     Arguments:
@@ -103,32 +102,3 @@ def compute_iou(boxes1, boxes2):
         boxes1_area[:, None] + boxes2_area - intersection_area, 1e-8
     )
     return tf.clip_by_value(intersection_area / union_area, 0.0, 1.0)
-
-
-def visualize_detections(
-    image, boxes, classes, scores, figsize=(7, 7), linewidth=1, color=[0, 0, 1]
-):
-    """Visualize Detections."""
-    image = np.array(image, dtype=np.uint8)
-    plt.figure(figsize=figsize)
-    plt.axis("off")
-    plt.imshow(image)
-    ax = plt.gca()
-    for box, _cls, score in zip(boxes, classes, scores):
-        text = "{}: {:.2f}".format(_cls, score)
-        x1, y1, x2, y2 = box
-        w, h = x2 - x1, y2 - y1
-        patch = plt.Rectangle(
-            [x1, y1], w, h, fill=False, edgecolor=color, linewidth=linewidth
-        )
-        ax.add_patch(patch)
-        ax.text(
-            x1,
-            y1,
-            text,
-            bbox={"facecolor": color, "alpha": 0.4},
-            clip_box=ax.clipbox,
-            clip_on=True,
-        )
-    plt.show()
-    return ax
