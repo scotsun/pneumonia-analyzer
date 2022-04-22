@@ -1,5 +1,6 @@
 """Chest Radiography (CXR) Image object and methods."""
 
+from typing import Any
 from PIL import Image
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -91,6 +92,13 @@ class CXRMissingException(Exception):
             return "a CXRMissingException has been raised."
 
 
+def img_to_bytes(img: Image) -> bytes:
+    """Convert the .jpg image to data in bytes so that it can be saved into MongDB."""
+    image_bytes = io.BytesIO()
+    img.save(image_bytes, format="JPEG")
+    return image_bytes.getvalue()
+
+
 def get_cxr_document(pid: str, annot_df: DataFrame) -> dict:
     """Convert a subset of dataframe a dict document."""
     # subset the dataframe
@@ -98,16 +106,13 @@ def get_cxr_document(pid: str, annot_df: DataFrame) -> dict:
     # check if there is observation
     if cxr_df.shape[0] == 0:
         raise CXRMissingException(f"patient pid:{pid} does not exist")
-    cxr_doc: dict[str, str | int | list[float]] = dict()
+    cxr_doc: dict[str, Any] = dict()
     cxr_doc["pid"] = pid
     cxr_doc["diagnose"] = int(cxr_df["Target"].values[0])
+    img = Image.open(f"./pneumonia/images/{pid}.jpg")
+    cxr_doc["img"] = img_to_bytes(img)
     cxr_df = cxr_df.drop("Target", axis=1)
     for col in cxr_df.columns:
         val = cxr_df[col].values.tolist()
         cxr_doc[col] = [] if np.isnan(val[0]) else val
     return cxr_doc
-
-
-def convert_img_to_bytes(img: Image):
-    """Convert the .jpg image to data in bytes so that it can be saved into MongDB."""
-    pass
