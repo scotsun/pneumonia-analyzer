@@ -1,5 +1,6 @@
 """Chest Radiography (CXR) Image object and methods."""
 
+
 from typing import Any
 from PIL import Image
 from matplotlib.figure import Figure
@@ -18,6 +19,7 @@ class CXR:
         """Init a CXR object."""
         self._pid = pid
         cxr_record = db.cxr.find_one({"pid": pid})
+        self._is_diagnosed = False
         if cxr_record:
             self._img = cxr_record["img"]
             self._diagnose = cxr_record["diagnose"]
@@ -25,20 +27,43 @@ class CXR:
             self._y = cxr_record["y"]
             self._width = cxr_record["width"]
             self._height = cxr_record["height"]
+            self._is_diagnosed = True
 
     @property
     def img(self) -> Image:
-        """Getter of img."""
+        """Getter of img as an Image class."""
+        if not self.is_diagnosed:
+            raise CXRMissingException(
+                f"patient pid:{self._pid} does not exist in the db."
+            )
         img = Image.open(BytesIO(self._img))
         return img
 
     @property
+    def is_diagnosed(self) -> bool:
+        """Getter of self._is_diagnosed."""
+        return self._is_diagnosed
+
+    @property
     def mark_symptoms(self) -> Figure:
-        """Produce bounding boxes for the symptometic area on the CXR image, and display."""
+        """Produce bounding boxes for the symptometic area on the CXR image, and display.
+
+            x,y ------> (width)
+            |
+            |  (Left,Top)
+            |       *_________
+            |       |         |
+            |       |         |
+                    |_________|
+        (height)              *
+                        (Right,Bottom)
+        """
+        if not self.is_diagnosed:
+            raise AttributeError("CXR has not been diagnosed yet.")
         fig, ax = plt.subplots()
         ax.imshow(self.img, cmap="gray")
-        num_box = len(self._x)
-        for i in range(num_box):
+        n = len(self._x)
+        for i in range(n):
             rect = patches.Rectangle(
                 (self._x[i], self._y[i]),
                 self._width[i],
@@ -48,13 +73,17 @@ class CXR:
                 facecolor="none",
             )
             ax.add_patch(rect)
-        plt.show()
+        plt.close()
         return fig
 
     @property
     def get_symptom_areas(self) -> Figure:
         """Clip out the symptom areas."""
+        if not self.is_diagnosed:
+            raise AttributeError("CXR has not been diagnosed yet.")
         n = len(self._x)
+        if n == 0:
+            raise AttributeError("CXR record does not show inflammation.")
         fig, ax = plt.subplots(1, n)
         for i in range(len(ax)):
             box = (
@@ -63,13 +92,14 @@ class CXR:
                 self._x[i] + self._width[i],
                 self._y[i] + self._height[i],
             )
-            clip = self._img.crop(box)
+            clip = self.img.crop(box)
             ax[i].imshow(clip, cmap="gray")
+        plt.close()
         return fig
 
 
 class CXRMissingException(Exception):
-    """Exception is raised when CXR for a given patient is missing."""
+    """Exception is raised when CXR for a given patient is missing in the annotations or the db."""
 
     def __init__(self, *args: object) -> None:
         """Initialize."""
@@ -99,7 +129,7 @@ def get_cxr_document(pid: str, annot_df: DataFrame) -> dict:
     cxr_df = annot_df.loc[annot_df["patientId"] == pid].drop("patientId", axis=1)
     # check if there is observation
     if cxr_df.shape[0] == 0:
-        raise CXRMissingException(f"patient pid:{pid} does not exist")
+        raise CXRMissingException(f"patient pid:{pid} does not exist.")
     cxr_doc: dict[str, Any] = dict()
     cxr_doc["pid"] = pid
     cxr_doc["diagnose"] = int(cxr_df["Target"].values[0])
@@ -110,3 +140,9 @@ def get_cxr_document(pid: str, annot_df: DataFrame) -> dict:
         val = cxr_df[col].values.tolist()
         cxr_doc[col] = [] if np.isnan(val[0]) else val
     return cxr_doc
+
+
+if __name__ == "__main__":
+    cxr = CXR(pid="00436515-870c-4b36-a041-de91049b9ab4")
+    f = cxr.mark_symptoms
+    print(f)
