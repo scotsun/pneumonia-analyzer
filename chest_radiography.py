@@ -9,7 +9,7 @@ from matplotlib import patches
 from pandas import DataFrame
 from io import BytesIO
 import numpy as np
-from app import db
+from db import db
 
 
 class CXR:
