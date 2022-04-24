@@ -30,6 +30,11 @@ class CXR:
             self._is_diagnosed = True
 
     @property
+    def pid(self) -> str:
+        """Getter of self._pid."""
+        return self.pid
+
+    @property
     def img(self) -> Image:
         """Getter of img as an Image class."""
         if not self.is_diagnosed:
@@ -73,6 +78,7 @@ class CXR:
                 facecolor="none",
             )
             ax.add_patch(rect)
+        plt.axis("off")
         plt.close()
         return fig
 
@@ -94,6 +100,7 @@ class CXR:
             )
             clip = self.img.crop(box)
             ax[i].imshow(clip, cmap="gray")
+        plt.axis("off")
         plt.close()
         return fig
 
