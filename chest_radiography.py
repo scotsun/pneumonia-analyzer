@@ -32,7 +32,7 @@ class CXR:
     @property
     def pid(self) -> str:
         """Getter of self._pid."""
-        return self.pid
+        return self._pid
 
     @property
     def img(self) -> Image:
@@ -67,7 +67,12 @@ class CXR:
             raise AttributeError("CXR has not been diagnosed yet.")
         fig, ax = plt.subplots()
         ax.imshow(self.img, cmap="gray")
+        ax.axis("off")
         n = len(self._x)
+        if n == 0:
+            raise NoSymptomException(
+                f"No symptom has been detected on pid: {self._pid}"
+            )
         for i in range(n):
             rect = patches.Rectangle(
                 (self._x[i], self._y[i]),
@@ -78,18 +83,19 @@ class CXR:
                 facecolor="none",
             )
             ax.add_patch(rect)
-        plt.axis("off")
         plt.close()
         return fig
 
     @property
-    def get_symptom_areas(self) -> Figure:
+    def segment_symptom(self) -> Figure:
         """Clip out the symptom areas."""
         if not self.is_diagnosed:
             raise AttributeError("CXR has not been diagnosed yet.")
         n = len(self._x)
         if n == 0:
-            raise AttributeError("CXR record does not show inflammation.")
+            raise NoSymptomException(
+                f"No symptom has been detected on pid: {self._pid}"
+            )
         fig, ax = plt.subplots(1, n)
         for i in range(len(ax)):
             box = (
@@ -100,20 +106,34 @@ class CXR:
             )
             clip = self.img.crop(box)
             ax[i].imshow(clip, cmap="gray")
-        plt.axis("off")
+            ax[i].axis("off")
         plt.close()
         return fig
+
+
+class NoSymptomException(Exception):
+    """Exception is raised when the CXR is free of symptom and still asking for symptom."""
+
+    def __init__(self, *args: object) -> None:
+        """Init an exception."""
+        super().__init__(*args)
+        self.message = args[0]
+
+    def __str__(self) -> str:
+        """Output string."""
+        if self.message:
+            return "{0}".format(self.message)
+        else:
+            return "a NoSymptomException has been raised."
 
 
 class CXRMissingException(Exception):
     """Exception is raised when CXR for a given patient is missing in the annotations or the db."""
 
     def __init__(self, *args: object) -> None:
-        """Initialize."""
-        if args:
-            self.message = args[0]
-        else:
-            self.message = None
+        """Init an exception."""
+        super().__init__(*args)
+        self.message = args[0]
 
     def __str__(self) -> str:
         """Output string."""

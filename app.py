@@ -1,51 +1,6 @@
-"""Application front-end."""
+"""Run the application."""
 
-
-from pymongo import MongoClient
-import tkinter
-from tkinter import CENTER, ttk
-from app_fun import *
-from db import db
-from chest_radiography import CXR
-
-
-def gui() -> None:
-    """GUI front-end."""
-    root = tkinter.Tk()
-    root.title("Pneumonia Chest Radiography Diagnoser")
-    root.geometry("700x600")
-    add_cxr_diagnoser_frame(root)
-
-    root.mainloop()
-
-
-def add_cxr_diagnoser_frame(root: tkinter.Tk) -> None:
-    """Generate GUI frame and link to the db."""
-    # first frame:
-    search_frame = ttk.Frame(root, padding=20, name="search_frame")
-    search_frame.place(anchor=CENTER, relx=0.5, rely=0.1)
-    pid_label = ttk.Label(search_frame, text="input pid:", padding=20)
-    pid_entry = ttk.Entry(search_frame, width=35)
-    search_button = ttk.Button(search_frame, text="click to search")
-    pid_label.grid(row=0, column=0)
-    pid_entry.grid(row=0, column=1)
-    search_button.grid(row=0, column=2)
-    # second frame:
-    diag_action_frame = ttk.Frame(root, padding=20, name="diag_action_frame")
-    diag_action_frame.place(anchor=CENTER, relx=0.5, rely=0.2)
-    mark_button = ttk.Button(diag_action_frame, text="diagnose: mark inflamation")
-    segment_button = ttk.Button(diag_action_frame, text="diagnose: segment inflamation")
-    clear_button = ttk.Button(diag_action_frame, text="clear")
-    mark_button.grid(row=0, column=0)
-    segment_button.grid(row=0, column=1)
-    clear_button.grid(row=0, column=2)
-
-    # add actions to buttons
-    search_button["command"] = lambda: find_record(pid_entry)
-    mark_button["command"] = lambda: diagnose_record(root, pid_entry)
-    segment_button["command"] = lambda: diagnose_record(root, pid_entry)
-    clear_button["command"] = lambda: clear_img_record(root, pid_entry)
-
+from gui import main
 
 if __name__ == "__main__":
-    gui()
+    main()
