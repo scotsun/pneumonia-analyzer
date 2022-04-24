@@ -50,19 +50,43 @@ class CXR:
         return self._is_diagnosed
 
     @property
-    def mark_symptoms(self) -> Figure:
-        """Produce bounding boxes for the symptometic area on the CXR image, and display.
-
+    def display_bboxes(self) -> None:
+        """Print all bound boxes for inflamations."""
+        if self.is_diagnosed:
+            print("Inflamations are located by bounding boxes")
+            print(
+                """
             x,y ------> (width)
-            |
-            |  (Left,Top)
-            |       *_________
-            |       |         |
-            |       |         |
-                    |_________|
-        (height)              *
-                        (Right,Bottom)
-        """
+                |
+                |  (Left,Top)
+                |       *_________
+                |       |         |
+                |       |         |
+                        |_________|
+            (height)              *
+                            (Right,Bottom)
+            """
+            )
+            n = len(self._x)
+            for i in range(n):
+                print(
+                    f"[x:{self._x[i]}, y:{self._y[i]}, width:{self._width[i]}, height:{self._height[i]}]"
+                )
+
+    @property
+    def display_img(self) -> Figure:
+        """Display the image."""
+        if not self.is_diagnosed:
+            raise AttributeError("CXR has not been diagnosed yet.")
+        fig, ax = plt.subplots()
+        ax.imshow(self.img, cmap="gray")
+        ax.axis("off")
+        plt.close()
+        return fig
+
+    @property
+    def mark_symptoms(self) -> Figure:
+        """Produce bounding boxes for the symptometic area on the CXR image, and display."""
         if not self.is_diagnosed:
             raise AttributeError("CXR has not been diagnosed yet.")
         fig, ax = plt.subplots()

@@ -29,18 +29,21 @@ def add_cxr_diagnoser_frame(root: tkinter.Tk) -> None:
     # second frame:
     diag_action_frame = ttk.Frame(root, padding=20, name="diag_action_frame")
     diag_action_frame.place(anchor=CENTER, relx=0.5, rely=0.2)
-    mark_button = ttk.Button(diag_action_frame, text="diagnose: mark inflamation")
-    segment_button = ttk.Button(diag_action_frame, text="diagnose: segment inflamation")
+    display_button = ttk.Button(diag_action_frame, text="diagnose: display")
+    mark_button = ttk.Button(diag_action_frame, text="diagnose: mark")
+    segment_button = ttk.Button(diag_action_frame, text="diagnose: segment")
     clear_button = ttk.Button(diag_action_frame, text="clear")
-    mark_button.grid(row=0, column=0)
-    segment_button.grid(row=0, column=1)
-    clear_button.grid(row=0, column=2)
+    display_button.grid(row=0, column=0)
+    mark_button.grid(row=0, column=1)
+    segment_button.grid(row=0, column=2)
+    clear_button.grid(row=0, column=3)
     # third frame:
     fig_frame = ttk.Frame(root, padding=20, name="fig_frame")
     fig_frame.place(anchor=CENTER, relx=0.5, rely=0.6)
 
     # add actions to buttons
     search_button["command"] = lambda: find_record(pid_entry)
+    display_button["command"] = lambda: diagnose_record(fig_frame, pid_entry, "display")
     mark_button["command"] = lambda: diagnose_record(fig_frame, pid_entry, "mark")
     segment_button["command"] = lambda: diagnose_record(fig_frame, pid_entry, "segment")
     clear_button["command"] = lambda: clear_img_record(fig_frame, pid_entry)

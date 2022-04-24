@@ -17,10 +17,15 @@ def find_record(pid_entry: ttk.Entry) -> None:
         print("pid entry cannot be empty.")
         return
     # locate record in db; if find anything, give simple printout for the diagnosis
-    print(f"checking for pid:'{pid}' ...")
+    print(f"Checking for pid:'{pid}'...")
     cxr = CXR(pid=pid)
     if cxr.is_diagnosed:
-        print(cxr._x)  # TODO: give more info
+        n = len(cxr._x)
+        print(f"Find number of inflamation areas: {n}")
+        if n == 0:
+            print("No inflamation is detected.")
+            return
+        cxr.display_bboxes
         return
     else:
         print(f"pid:'{pid}' has not been diagnosed yet.")
@@ -42,7 +47,9 @@ def diagnose_record(
         print(f"pid:'{cxr.pid}' has not been diagnosed yet.")
         return
     try:
-        if parse_type == "mark":
+        if parse_type == "display":
+            fig = cxr.display_img
+        elif parse_type == "mark":
             fig = cxr.mark_symptoms
         elif parse_type == "segment":
             fig = cxr.segment_symptom
