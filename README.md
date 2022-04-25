@@ -5,7 +5,8 @@
 [![prog-status](https://img.shields.io/badge/status-submit%20for%20final-bright?style=plastic)](https://shields.io/)
 
 
-[![made-with-python](	https://img.shields.io/badge/Python-FFD43B?style=plastic&logo=python&logoColor=blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-FFD43B?style=plastic&logo=python&logoColor=blue)](https://www.python.org/)
+[![Pytorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=plastic&logo=PyTorch&logoColor=white)](https://pytorch.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=plastic&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=plastic&logo=Kaggle&logoColor=white)](https://www.kaggle.com/)
 
@@ -14,7 +15,8 @@
 The repo has two mini apps (both with tkinter GUI as the front end) dealing with pneumonia chest radiography diagnoser image data.
 
 ### **Detector**:  
-This app loads a pre-trained Fast R-CNN object detection neural network in the background. After the user upload a *.jpg file through the file dialog, it will pop up the image and mark inferred inflamation areas with a confidence probability. The terminal will also display information about result.
+This app loads a Fast R-CNN object detection neural network in the background. After the user upload a *.jpg file through the file dialog, it will pop up the image and mark inferred inflamation areas with a confidence probability. The terminal will also display information about result.  
+For details about the training, please check the `colab-training` folder. [`Detecto`](https://detecto.readthedocs.io/en/latest/), a higher-level compact package writen in Pytorch is used.
 
 ### **Diagnoser**:
 This app connect to a MongDB in the background. It can provide information about a CRX record after the user input the corresponding patinet ID in the entry box. The app can display the original image, mark the symptom areas, and segment them.
