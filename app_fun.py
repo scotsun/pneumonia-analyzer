@@ -5,6 +5,7 @@ from chest_radiography import CXR, NoSymptomException
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+
 matplotlib.use("TkAgg")
 
 

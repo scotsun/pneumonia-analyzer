@@ -11,11 +11,6 @@ from io import BytesIO
 import numpy as np
 from db import db
 
-from detecto import core, utils, visualize
-
-# # model = core.Model(["pneumonia"], pretrained=False)
-# # model.load("weights.pth", ["pneumonia"])
-
 
 class CXR:
     """Chest Radiography."""
@@ -138,18 +133,6 @@ class CXR:
             ax[i].axis("off")
         plt.close()
         return fig
-
-    def inference_symptom(self, threshold: float) -> None:
-        """Make inference."""
-        if self.is_diagnosed:
-            raise AttributeError("CXR has has been diagnosed; no need for inference.")
-        image = utils.read_image(f"./samples/{self.pid}.jpg")
-        # _, _boxes, _scores = model.predict(image)
-        # # select by threshold
-        # boxes = _boxes[_scores > threshold]
-        # scores = _scores[_scores > threshold]
-        # conf = list(scores.numpy().round(2).astype("str"))
-        # visualize.show_labeled_image(image, boxes, conf)
 
 
 class NoSymptomException(Exception):
