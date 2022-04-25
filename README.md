@@ -1,6 +1,6 @@
 
 # Pneumonia Chest Radiography Diagnoser
-> A suite of **CRUDE** software apps for diagnosing and detecting pneumonia symptoms
+> A suite of **SKETCHY** software apps for diagnosing and detecting pneumonia symptoms
 
 [![prog-status](https://img.shields.io/badge/status-submit%20for%20final-bright?style=plastic)](https://shields.io/)
 
@@ -16,7 +16,7 @@ The repo has two mini apps (both with tkinter GUI as the front end) dealing with
 
 ### **Detector**:  
 This app loads a Fast R-CNN object detection neural network in the background. After the user upload a *.jpg file through the file dialog, it will pop up the image and mark inferred inflamation areas with a confidence probability. The terminal will also display information about result.  
-For details about the training, please check the `colab-training` folder. [`Detecto`](https://detecto.readthedocs.io/en/latest/), a higher-level compact package writen in Pytorch is used.
+For details about the training, please check the `colab-training` folder. [`Detecto`](https://detecto.readthedocs.io/en/latest/), a higher-level compact package writen in Pytorch, is used for training the model.
 
 ### **Diagnoser**:
 This app connect to a MongDB in the background. It can provide information about a CRX record after the user input the corresponding patinet ID in the entry box. The app can display the original image, mark the symptom areas, and segment them.
