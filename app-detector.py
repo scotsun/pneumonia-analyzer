@@ -17,7 +17,7 @@ def app() -> None:
     """Run the app."""
     os.system("cls||clear")
     root = tkinter.Tk()
-    root.title("PneumoDetecto")
+    root.title("PneumoDetectr")
     root.geometry("200x50")
     upload_to_inference_button = ttk.Button(root, text="upload & infer")
     upload_to_inference_button.pack()
@@ -28,12 +28,14 @@ def app() -> None:
 def upload_action(event=None) -> None:
     """Button commpand."""
     filename = filedialog.askopenfilename(
-        title="Select file", filetypes=(("txt files", "*.txt"), ("all files", "*.*"))
+        title="Select file", filetypes=(("jpg files", "*.jpg"), ("all files", "*.*"))
     )
+    if filename == "":
+        return
     file_type = filename.split(".")[-1]
     if file_type not in {"jpg", "jpeg"}:
         print("the uploaded image should be *.jpg | *.jpeg")
-    print("Selected PID:", filename.split(".")[-2])
+    print("Selected PID:", filename.split(".")[0].split("/")[-1])
     inference_symptom(filepath=filename)
 
 
@@ -68,7 +70,7 @@ def _inference_symptom(boxes: torch.Tensor, scores: torch.Tensor) -> None:
     )
     for i in range(len(boxes)):
         print("confidence:", round(scores[i].item(), 2))
-        print("box:", [boxes[i][j] for j in range(4)])
+        print("       box:", [round(boxes[i][j].item()) for j in range(4)])
 
 
 if __name__ == "__main__":
