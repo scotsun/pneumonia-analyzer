@@ -1,5 +1,5 @@
 
-# Pneumonia Chest Radiography Diagnoser
+# Pneumonia Chest Radiography Analyzer
 > A suite of **SKETCHY** software apps for diagnosing and detecting pneumonia symptoms
 
 [![prog-status](https://img.shields.io/badge/status-submit%20for%20final-bright?style=plastic)](https://shields.io/)
