@@ -27,7 +27,7 @@ This app connect to a MongDB in the background. It can provide information about
 ## Setup
 ### Installation
 ```sh
-git clone https://github.com/scotsun/biostat821final_project.git
+git clone https://github.com/scotsun/PneumoniaAnalyzer-biostat821final_project.git
 ```
 
 ### Download the data from `Kaggle API`
