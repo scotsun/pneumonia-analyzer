@@ -121,6 +121,18 @@ class CXR:
                 f"No symptom has been detected on pid: {self._pid}"
             )
         fig, ax = plt.subplots(1, n)
+        if n == 1:
+            box = (
+                self._x[0],
+                self._y[0],
+                self._x[0] + self._width[0],
+                self._y[0] + self._height[0],
+            )
+            clip = self.img.crop(box)
+            ax.imshow(clip, cmap="gray")
+            ax.axis("off")
+            plt.close()
+            return fig
         for i in range(len(ax)):
             box = (
                 self._x[i],
