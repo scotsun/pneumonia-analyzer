@@ -27,7 +27,7 @@ This app connect to a MongDB in the background. It can provide information about
 ## Setup
 ### Setting up environment
 ```sh
-cd [to-the-repo-folder]
+cd [path-to-the-repo-folder]
 pip install -r requirement.txt
 ```
 
@@ -57,6 +57,32 @@ Check [MongDB](https://www.mongodb.com/docs/manual/introduction/) for installati
 ```sh
 python build_db.py
 ```
+
+### Check DB Config
+After intalling MongDB and running the service, check the if db is build correct through `mongosh`
+```sh
+mongosh mongodb://127.0.0.1:27017/pneumonia
+```
+
+Check if the command below gives an output in the following *format*.
+```mongsh
+pneumonia> db.cxr.findOne({}, {img:0})
+```
+
+```sh
+{
+  _id: ObjectId("6261cf5bfaeda86460b912ca"),
+  pid: '00436515-870c-4b36-a041-de91049b9ab4',
+  diagnose: 1,
+  x: [ 264, 562 ],
+  y: [ 152, 152 ],
+  width: [ 213, 256 ],
+  height: [ 379, 453 ]
+}
+```
+
+This indicates data is correctly inserted. The field `img` is suppressed to avoid displaying the long but meaningless printout of the bytes-format image object.
+
 ## Contributing
 1. Fork it
 2. Create your feature branch (`git checkout -b feature/fooBar`)
