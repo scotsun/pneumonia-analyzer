@@ -3,7 +3,6 @@
 import os
 import tkinter
 from tkinter import filedialog, ttk
-from typing import Sized
 import torch
 from detecto import core, utils, visualize
 

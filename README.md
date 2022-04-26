@@ -11,7 +11,7 @@
 [![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=plastic&logo=Kaggle&logoColor=white)](https://www.kaggle.com/)
 
 
-## API Description
+## Repo Description
 The repo has two mini apps (both with tkinter GUI as the front end) dealing with pneumonia chest radiography diagnoser image data.
 
 ### **Detector**:  
@@ -21,10 +21,16 @@ For details about the training, please check the `colab-training` folder. [`Dete
 ### **Diagnoser**:
 This app connect to a MongDB in the background. It can provide information about a CRX record after the user input the corresponding patinet ID in the entry box. The app can display the original image, mark the symptom areas, and segment them.
 
-*(The reason for not combining them: after I combine the two set of functionalities, the Pytorch deep learning model and PyMongo client will cause a segmentation fault.)*
+*(The reason for not combining them: after I combine the two set of functionalities, the PyTorch deep learning model and PyMongo client will cause a segmentation fault.)*
 
 
 ## Setup
+### Setting up environment
+```sh
+cd [to-the-repo-folder]
+pip install -r requirement.txt
+```
+
 ### Installation
 ```sh
 git clone https://github.com/scotsun/PneumoniaAnalyzer-biostat821final_project.git
