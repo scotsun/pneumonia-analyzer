@@ -33,7 +33,7 @@ pip install -r requirement.txt
 
 ### Installation
 ```sh
-git clone https://github.com/scotsun/PneumoniaAnalyzer-biostat821final_project.git
+git clone https://github.com/scotsun/pneumonia-analyzer.git
 ```
 
 ### Download the data from `Kaggle API`
